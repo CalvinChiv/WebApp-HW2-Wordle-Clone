@@ -1,4 +1,10 @@
 // to start run npx live-server build in terminal
+/* 
+My Changes:
+Extend colors to keyboard
+Maybe a timed mode
+Play again button
+*/
 import { WORDS } from "./words.js";
 
 const NUMBER_OF_GUESSES = 6;
@@ -156,8 +162,9 @@ function checkGuess() {
             break;
        }
     }
+}
 
-    document.getElementById("keyboard-cont").addEventListener('click', (e) => {
+document.getElementById("keyboard-cont").addEventListener('click', (e) => {
         const target = e.target;
         if (!target.classList.contains("keyboard-button")) {
             return;
@@ -170,26 +177,25 @@ function checkGuess() {
         }
 
         document.dispatchEvent(new KeyboardEvent('keyup', {'key' : key}))
-    });
+});
 
-    const animateCSS = (element, animation, prefix = 'animate__') =>
-        //we create a new Promise and return it
-        new Promise((resolve, reject) => {
-            const animationName = `${prefix}${animation}`;
-            //const node = document.querySelector(element);
-            const node = element;
-            node.style.setProperty('--animate-duration', '0.3s');
+const animateCSS = (element, animation, prefix = 'animate__') =>
+    //we create a new Promise and return it
+    new Promise((resolve, reject) => {
+        const animationName = `${prefix}${animation}`;
+        //const node = document.querySelector(element);
+        const node = element;
+        node.style.setProperty('--animate-duration', '0.3s');
 
-            node.classList.add(`${prefix}animated`, animationName);
+        node.classList.add(`${prefix}animated`, animationName);
 
-            //When the animation ends, we clean the classes and resolve the Promise
-            function handleAnimationEnd(event) {
-                event.stopPropagation();
-                node.classList.remove(`${prefix}animated`, animationName);
-                resolve('Animation ended');
+        //When the animation ends, we clean the classes and resolve the Promise
+        function handleAnimationEnd(event) {
+            event.stopPropagation();
+            node.classList.remove(`${prefix}animated`, animationName);
+            resolve('Animation ended');
 
-                node.addEventListener('animationend', handleAnimationEnd, {once:true});
-            }
+            node.addEventListener('animationend', handleAnimationEnd, {once:true});
         }
-    );
-}
+    }
+);
