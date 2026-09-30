@@ -13,6 +13,8 @@
 <body>
     <h1> Wordle Clone </h1>
 
+    <p id="countdown" hidden>10:00</p>
+
     <div id="game-board">
     
     </div>
@@ -55,7 +57,11 @@
     </div>
 
     <div id="buttons">
-        <button id="reset-button">Restart</button>
+        <row>
+            <button id="reset-button">Restart</button>
+            <button id="time-button">Play Timed</button>
+        </row>
+
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>

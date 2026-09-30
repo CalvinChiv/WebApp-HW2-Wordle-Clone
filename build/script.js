@@ -4,15 +4,50 @@ My Planned Changes:
 Maybe a timed mode
 Play again button !done!
 */
+import { start } from "live-server";
 import { WORDS } from "./words.js";
 
 const NUMBER_OF_GUESSES = 6;
+const resetButton = document.getElementById("reset-button");
+const timeButton = document.getElementById("time-button");
+const startingMinutes = 3;
+const countdownEl = document.getElementById('countdown');
+
 let guessesRemaining = NUMBER_OF_GUESSES;
 let currentGuess = [];
 let nextLetter = 0;
 let rightGuessString = WORDS[Math.floor(Math.random() * WORDS.length)];
-const resetButton = document.getElementById("reset-button");
+let countdownTime = 60000;
+let isTimedMode = false;
+let time = startingMinutes * 60;
+
+function defaultState() {
+    guessesRemaining = NUMBER_OF_GUESSES;
+    currentGuess = [];
+    nextLetter = 0;
+    rightGuessString = WORDS[Math.floor(Math.random() * WORDS.length)];
+    countdownTime = 60000;
+    isTimedMode = false;
+    time = startingMinutes * 60;
+}
+
 console.log(rightGuessString);
+
+function updateCountdown() {
+    const minutes = Math.floor(time / 60);
+    let seconds = time % 60;
+    countdownEl.innerHTML = `${minutes} : ${seconds}`;
+
+    time--;
+}
+
+if (isTimedMode) {
+        const minutes = Math.floor;
+        setInterval(updateCountdown, 1000);
+    } else {
+        countdownEl.innerHTML = '';
+        countdownEl.hidden = true;
+    }
 
 function initBoard() {
     let board = document.getElementById("game-board");
@@ -29,6 +64,9 @@ function initBoard() {
             board.appendChild(row);
         }
     }
+
+    //where counter is , might not be the best place
+    
 }
 
 initBoard();
@@ -204,22 +242,29 @@ const animateCSS = (element, animation, prefix = 'animate__') =>
     });
 
 
-    // Addition 1: Reset button to restart the game
+// Addition 1: Reset button to restart the game
 resetButton.addEventListener('click', () => {
-    guessesRemaining = NUMBER_OF_GUESSES;
-    currentGuess = [];
-    nextLetter = 0;
-    rightGuessString = WORDS[Math.floor(Math.random() * WORDS.length)];
-    console.log(rightGuessString);
+    resetGame()
+});
 
-    toastr.info("Restarting game!");
-
+function resetGame() {
+    defaultState();
     initBoard();
     resetKeyboard();
-});
+
+    console.log(rightGuessString);
+    toastr.info("Restarting game!");
+    countdownEl.hidden = true;
+}
 
 function resetKeyboard() {
     for (const elem of document.getElementsByClassName("keyboard-button")) {
         elem.style.backgroundColor = '';
     }
 }
+
+// Addition 2: Timed Mode
+timeButton.addEventListener('click', () => {
+    resetGame();
+    isTimedMode = true;
+})
