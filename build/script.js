@@ -127,7 +127,7 @@ function checkGuess() {
             animateCSS(box, "flipInX");
             //shadebox
             box.style.backgroundColor = letterColor;
-            shadeKeyBoard(box, letterColor);
+            shadeKeyboard(box, letterColor);
         }, delay);
     }
 
