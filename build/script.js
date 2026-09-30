@@ -1,17 +1,16 @@
 // to start run npx live-server build in terminal
 /* 
 My Planned Changes:
-Maybe a timed mode
+Maybe a timed mode !done!
 Play again button !done!
 */
-import { start } from "live-server";
 import { WORDS } from "./words.js";
 
 const NUMBER_OF_GUESSES = 6;
 const resetButton = document.getElementById("reset-button");
 const timeButton = document.getElementById("time-button");
-const startingMinutes = 3;
 const countdownEl = document.getElementById('countdown');
+const startingMinutes = 1;
 
 let guessesRemaining = NUMBER_OF_GUESSES;
 let currentGuess = [];
@@ -29,25 +28,32 @@ function defaultState() {
     countdownTime = 60000;
     isTimedMode = false;
     time = startingMinutes * 60;
+    countdownEl.innerHTML = "";
 }
 
 console.log(rightGuessString);
 
 function updateCountdown() {
+    if(!isTimedMode) return;
+
     const minutes = Math.floor(time / 60);
     let seconds = time % 60;
-    countdownEl.innerHTML = `${minutes} : ${seconds}`;
 
-    time--;
+    seconds = seconds < 10 ? '0' + seconds : seconds;
+
+    countdownEl.innerHTML = `${minutes}:${seconds}`;
+    
+    if(time == 0) {
+        toastr.error("Ran out of time!");
+        guessesRemaining = 0;
+        isTimedMode = false;
+        return;
+    }
+
+    if(time > 0) time--;
 }
 
-if (isTimedMode) {
-        const minutes = Math.floor;
-        setInterval(updateCountdown, 1000);
-    } else {
-        countdownEl.innerHTML = '';
-        countdownEl.hidden = true;
-    }
+setInterval(updateCountdown, 1000);
 
 function initBoard() {
     let board = document.getElementById("game-board");
@@ -251,10 +257,10 @@ function resetGame() {
     defaultState();
     initBoard();
     resetKeyboard();
+    isTimedMode = false;
 
     console.log(rightGuessString);
     toastr.info("Restarting game!");
-    countdownEl.hidden = true;
 }
 
 function resetKeyboard() {
@@ -267,4 +273,7 @@ function resetKeyboard() {
 timeButton.addEventListener('click', () => {
     resetGame();
     isTimedMode = true;
+
+    time = startingMinutes * 60;
+    updateCountdown;
 })

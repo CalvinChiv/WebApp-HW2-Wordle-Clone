@@ -1,3 +1,3 @@
 My additions:
 1. Restart Functionality
-2. ...coming soon!
+2. Timed Mode
