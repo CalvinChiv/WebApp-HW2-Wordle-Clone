@@ -1,9 +1,8 @@
 // to start run npx live-server build in terminal
 /* 
 My Planned Changes:
-Extend colors to keyboard
 Maybe a timed mode
-Play again button
+Play again button !done!
 */
 import { WORDS } from "./words.js";
 
@@ -12,10 +11,12 @@ let guessesRemaining = NUMBER_OF_GUESSES;
 let currentGuess = [];
 let nextLetter = 0;
 let rightGuessString = WORDS[Math.floor(Math.random() * WORDS.length)];
+const resetButton = document.getElementById("reset-button");
 console.log(rightGuessString);
 
 function initBoard() {
     let board = document.getElementById("game-board");
+    board.innerHTML = "";
 
     for (let i = 0; i < NUMBER_OF_GUESSES; i++) {
         let row = document.createElement("div")
@@ -68,7 +69,7 @@ function insertLetter(pressedKey) {
     box.textContent = pressedKey;
     box.classList.add("filled-box")
     currentGuess.push(pressedKey);
-    nextLetter++;    
+    nextLetter++;
 }
 
 function deleteLetter() {
@@ -109,17 +110,18 @@ function checkGuess() {
         if (letterPosition === -1) {
             letterColor = 'gray';
         } else {
-                //now letter is definitely in word
-                // if letter index and right guess index are the same
-                // letter is in the right position
+            //now letter is definitely in word
+            // if letter index and right guess index are the same
+            // letter is in the right position
             if (currentGuess[i] === rightGuess[i]) {
                 letterColor = 'green';
             } else {
                 //shade box yellow
-                letterColor = 'yellow';}
+                letterColor = 'yellow';
+            }
         }
 
-        rightGuess[letterPosition] = '#';  
+        rightGuess[letterPosition] = '#';
 
         let delay = 250 * i;
         setTimeout(() => {
@@ -127,7 +129,7 @@ function checkGuess() {
             animateCSS(box, "flipInX");
             //shadebox
             box.style.backgroundColor = letterColor;
-            shadeKeyboard(box, letterColor);
+            shadeKeyboard(letter, letterColor);
         }, delay);
     }
 
@@ -147,36 +149,38 @@ function checkGuess() {
     }
 
     function shadeKeyboard(letter, color) {
-        for(const elem of document.getElementsByClassName("keyboard-button")) {
-            if (elem.textContent === letter) {
+        for (const elem of document.getElementsByClassName("keyboard-button")) {
+            if (elem.textContent.toLowerCase() === letter) {
                 let oldColor = elem.style.backgroundColor;
-                if (oldColor === 'green')
+                if (oldColor === 'green') {
                     return;
-            }
+                }
 
-            if (oldColor == 'yellow' && color !== 'green') {
-                return;
-            }
 
-            elem.style.backgroundColor = color;
-            break;
-       }
+                if (oldColor == 'yellow' && color !== 'green') {
+                    return;
+                }
+
+                elem.style.backgroundColor = color;
+                break;
+            }
+        }
     }
 }
 
-document.getElementById("keyboard-cont").addEventListener('click', (e) => {
-        const target = e.target;
-        if (!target.classList.contains("keyboard-button")) {
-            return;
-        }
+document.getElementById("keyboard-cont").addEventListener('click', (e) => { //makes screen keyboard work
+    const target = e.target;
+    if (!target.classList.contains("keyboard-button")) {
+        return;
+    }
 
-        let key = target.textContent;
+    let key = target.textContent;
 
-        if (key === "DEL") {
-            key = 'Backspace';
-        }
+    if (key === "Del") {
+        key = 'Backspace';
+    }
 
-        document.dispatchEvent(new KeyboardEvent('keyup', {'key' : key}))
+    document.dispatchEvent(new KeyboardEvent('keyup', { 'key': key }))
 });
 
 const animateCSS = (element, animation, prefix = 'animate__') =>
@@ -195,7 +199,27 @@ const animateCSS = (element, animation, prefix = 'animate__') =>
             node.classList.remove(`${prefix}animated`, animationName);
             resolve('Animation ended');
 
-            node.addEventListener('animationend', handleAnimationEnd, {once:true});
+            node.addEventListener('animationend', handleAnimationEnd, { once: true });
         }
+    });
+
+
+    // Addition 1: Reset button to restart the game
+resetButton.addEventListener('click', () => {
+    guessesRemaining = NUMBER_OF_GUESSES;
+    currentGuess = [];
+    nextLetter = 0;
+    rightGuessString = WORDS[Math.floor(Math.random() * WORDS.length)];
+    console.log(rightGuessString);
+
+    toastr.info("Restarting game!");
+
+    initBoard();
+    resetKeyboard();
+});
+
+function resetKeyboard() {
+    for (const elem of document.getElementsByClassName("keyboard-button")) {
+        elem.style.backgroundColor = '';
     }
-);
+}
