@@ -1,6 +1,6 @@
 // to start run npx live-server build in terminal
 /* 
-My Changes:
+My Planned Changes:
 Extend colors to keyboard
 Maybe a timed mode
 Play again button
